@@ -10,3 +10,4 @@ numpy==1.19.4
 cycler==0.10.0
 tesseract==4.1.1
 pytesseract==0.3.6
+opencv==4.4.0.46
