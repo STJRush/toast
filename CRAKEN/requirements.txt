@@ -1,1 +1,12 @@
+# Requirements for C.R.A.K.E.N
+# This will install all prerequisites needed for C.R.A.K.E.N to run
+# Clone Repository via command line, cd into and run using:
+# sudo apt-get install requirements.txt
+# Ensure CMD/Terminal user has elevated command access
+# :)
 
+python==3.8.0
+numpy==1.19.4
+cycler==0.10.0
+tesseract==4.1.1
+pytesseract==0.3.6
