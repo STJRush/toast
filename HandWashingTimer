@@ -1,0 +1,80 @@
+import RPi.GPIO as GPIO
+import time
+from gpiozero import Buzzer
+import csv
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(16,GPIO.OUT)
+GPIO.setup(12,GPIO.OUT)
+GPIO.setup(23,GPIO.OUT)
+TRIG = 5
+ECHO = 6                        #setting up the breadboard and pins
+
+def greenled():
+    print("LED on")
+    GPIO.output(16,GPIO.HIGH)
+    time.sleep(0.9)
+    print("LED off")
+    GPIO.output(16,GPIO.LOW)        #my green LED's code
+    
+def redled():
+    print("LED on")
+    GPIO.output(12,GPIO.HIGH)
+    time.sleep(0.9)
+    print("LED off")
+    GPIO.output(12,GPIO.LOW)        #my red LED's code
+    
+def buzzer():
+    GPIO.output(23,GPIO.HIGH)
+    time.sleep(1)
+    GPIO.output(23,GPIO.LOW)        #my buzzer's code
+            
+def distcheck():
+    GPIO.output(TRIG, True)
+    time.sleep(0.0001)
+    GPIO.output(TRIG, False)
+    
+    while GPIO.input(ECHO) == 0:
+        pulse_start = time.time()
+        
+    while GPIO.input(ECHO) == 1:
+        pulse_end = time.time()
+        
+    pulse_duration = pulse_end - pulse_start
+    
+    distance = pulse_duration * 17150
+    
+    distance = round(distance, 2)
+    
+    return distance     #checks and gathers information on distance from the ultrasonic sensor
+
+while True:
+    
+        print("distance measurement in progress")
+
+        GPIO.setup(TRIG,GPIO.OUT)
+        GPIO.setup(ECHO,GPIO.IN)
+
+        GPIO.output(TRIG, False)
+        print("waiting for sensor to settle")
+        time.sleep(2)
+
+        print(distcheck())      #displays the distance for the user to see in the shell
+        
+        while (distcheck()) <= 17:      #measures if hands are beneath the tap to wash hands 
+
+            for (x) in range (20):
+                greenled()
+                time.sleep(0.1)         #makeshift timer from 20
+                
+                if  (distcheck()) >= 17:
+                    redled()
+                    buzzer()
+                    break        #stops the timer if someones hands move away and alerts them if its too early
+        
+            break
+        
+        if (distcheck()) >= 17:
+            print("looping")        #shows user that the code has not started yet
+        
+GPIO.cleanup()
